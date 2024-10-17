@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     //return view('welcome');
-    return view('front.form-pengaduan');
-});
+    // return view('front.form-pengaduan');
+    return view('dashboard.index');
+})->middleware(['auth']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -37,7 +40,9 @@ Route::get('/dashboard', function () {
 
 });
 
-require __DIR__.'/auth.php';
+route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function() {
+    route::get('/',[AdminController::class, 'index'])->name('admin.index');
+});
 
 Auth::routes();
 
