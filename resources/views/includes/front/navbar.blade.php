@@ -40,20 +40,20 @@
     <nav class="main-navbar">
         <div class="container d-flex justify-content-center align-items-center">
             <ul>
-                <li class="menu-item">
-                    <a href="index.html" class='menu-link'>
+                <li class="menu-item {{ request()->routeIs('guest.forcomplaint') ? 'active' : ''}}">
+                    <a href="{{ route('guest.formcomplaint')}}" class='menu-link'>
                         <div><i class="bi bi-card-checklist fs-5 me-2"></i> Form Pengaduan</div>
                     </a>
                 </li>  
 
-                <li class="menu-item">
-                    <a href="index.html" class='menu-link'>
+                <li class="menu-item {{ request()->routeIs('guest.complaints') ? 'active' : ''}}">
+                    <a href="{{ route('guest.complaints')}}" class='menu-link'>
                         <div><i class="bi bi-newspaper fs-5 me-2"></i> Semua Pengaduan</div>
                     </a>
                 </li>                         
 
-                <li class="menu-item active">
-                    <a href="index.html" class='menu-link'>
+                <li class="menu-item active {{ request()->routeIs('guest.statistics') ? 'active' : ''}}">
+                    <a href="{{ route('guest.statistics')}}" class='menu-link'>
                         <div><i class="bi bi-graph-up fs-5 me-2"></i> Data Statistik</div>
                     </a>
                 </li>                         

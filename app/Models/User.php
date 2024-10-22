@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $guard = [];
     /**
      * The attributes that should be hidden for serialization.
      *
