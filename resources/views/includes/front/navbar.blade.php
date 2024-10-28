@@ -6,6 +6,16 @@
                     <img src="{{ asset('images/adu.png') }}" class="img-fluid logo-pengaduan" alt="Logo">
                 </a>
             </div>
+            @if(Auth::check())
+            <a href="
+                @if (Auth::user()->role === 'admin')
+                    {{ route('admin.index') }}
+                @else
+                    #
+                @endif
+            " class="btn btn-primary">menuju fitur</a>
+            @endif
+            
             <div class="header-top-right">
 
                 @if(Auth::check())

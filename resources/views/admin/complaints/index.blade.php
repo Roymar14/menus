@@ -1,6 +1,14 @@
-@extends('layouts.base-front2')
+@extends('layouts.base-app')
 
-@section('title', 'Semua Pengaduan')
+@if (Route::currentRouteName() === 'admin.all.complaints')
+    @section('title', 'Semua Pengaduan')
+@elseif(Route::currentRouteName() === 'admin.all.pending.complaints')
+    @section('title', 'Semua Pengaduan pending')
+@elseif(Route::currentRouteName() === 'admin.all.process.complaints')
+    @section('title', 'Semua Pengaduan process')
+@elseif(Route::currentRouteName() === 'admin.all.success.complaints')
+    @section('title', 'Semua Pengaduan sukses')
+@endif
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/simple-datatables/style.css') }}">
@@ -83,31 +91,41 @@
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-                        <table class="table table-striped" id="pengaduan">
+                        <table class="table table-striped" id="myTable">
                             <thead class="table-light">
                                 <tr>
                                     <th>Gambar</th>
                                     <th>Nama Pengadu</th>
                                     <th>Judul Pengaduan</th>
-                                    <th>Telp</th>
-                                    <th>Email</th>
-                                    <th>Deskripsi</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach ($data as $value)
+                                @forelse($data as $value)
                             <tr>
-                                <td><img src="{{$value->images}}" alt="{{$value->title}}"></td>
-                                <td>{{$value->guest_name}}</td>
-                                <td>{{$value->title}}</td>
-                                <td>{{$value->guest_telp}}</td>
-                                <td>{{$value->guest_email}}</td>
-                                <td>{{$value->description}}</td>
-                                <td>{!!$value->status_badge!!}</td>
+                                <td><img src="" alt="gambar 1"></td>
+                                <td>
+                                    {{ $value->name ?? $value->guest_name }}                                
+                                </td>    
+                                <td>
+                                    {{ $value->title}}
+                                </td>
+                                <td><span class="badge"
+                                  style="
+                                  background-color:
+                                  @if($value->status == 'pending') #ff7976
+                                  @elseif($value->status == 'selesai') #5ddab4
+                                  @else #57caeb
+                                  @endif">{{ strtoupper($value->status) }}</span></td>
+                                <td class="text-center"><a href="{{ route('response.complaint', $value->id) }}">Tanggapi</a></td>                                       
                             </tr>
-                            @endforeach
+                            @empty
+
+                            @endforelse
+                            
                             </tbody>
+                            
                         </table>
                     </div>
                 </div>
@@ -117,12 +135,4 @@
 </section>
 @endsection
 
-@section('js')
-<script src="{{ asset('mazer/assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
-<script src="{{ asset('mazer/assets/static/js/pages/simple-datatables.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const dataTable = new simpleDatatables.DataTable("#pengaduan");
-    });
-</script>
-@endsection
+
