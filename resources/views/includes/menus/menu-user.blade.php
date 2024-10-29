@@ -10,6 +10,6 @@
     class="sidebar-item">
     <a href="index.html" class='sidebar-link'>
         <i class="bi bi-grid-fill"></i>
-        <span>Lihat ajukan</span>
+        <span>Ajukan Pengaduan</span>
     </a>
 </li>
