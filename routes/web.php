@@ -56,6 +56,12 @@ route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function() {
 
 Route::prefix('user')->middleware(['auth', 'isUser'])->group(function() {
     Route::get('/', [UserComplaintController::class, 'index'])->name('user.index');
+    Route::get('/complaint-form', [UserComplaintController::class, 'create'])->name('user.form.complaint');
+    Route::post('/complaint-form/store', [UserComplaintController::class, 'store'])->name('user.form.complaint.store');
+    Route::get('/complaints', [UserComplaintController::class, 'allUserComplaints'])->name('user.all.complaints');
+    Route::get('/all-pending-complaints', [UserComplaintController::class, 'allPendingUserComplaints'])->name('user.all.pending.complaints');
+    Route::get('/all-process-complaints', [UserComplaintController::class, 'allProcessUserComplaints'])->name('user.all.process.complaints');
+    Route::get('/all-success-complaints', [UserComplaintController::class, 'allDoneUserComplaints'])->name('user.all.success.complaints');
 });
 
 require __DIR__.'/auth.php';

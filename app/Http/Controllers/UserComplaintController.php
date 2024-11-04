@@ -41,7 +41,7 @@ class UserComplaintController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.complaints.form-pengaduan');
     }
 
     /**
@@ -49,7 +49,60 @@ class UserComplaintController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required|string|max:225',
+            'descripton' => 'required|string',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+
+        $user = Auth::user();
+        $complaint = new Complaint();
+        $complaint->name = $user->name;
+        $complaint->email = $user->email;
+        $complaint->telp = $user->telp;
+        $complaint->user_id = $user->id;
+
+        $complaint->title = $request->title;
+        $complaint->image = $request->imagePath;
+        $complaint->description = $request->description;
+
+        $complaint->save();
+        return redirect()->route('user.index')->with('msg' , 'pengaduan anda berhasil dikirimkan!');
+
+    }
+
+    function allUserComplaints()  { 
+        $data = Complaint::where('user_id', auth::user()->id)->get();
+        return view('user.complaints.index', [
+            'data' => $data
+        ]);
+    }
+
+    function allPendingUserComplaints() {
+        $data = Complaint::where('user_id', auth::user()->id)
+            ->where('status','pending')
+            ->get();
+        return view('user.complaints.index', [
+            'data' => $data
+        ]);
+    }
+
+    function allProcessUserComplaints() {
+        $data = Complaint::where('user_id', auth::user()->id)
+            ->where('status','proses')
+            ->get();
+        return view('user.complaints.index', [
+            'data' => $data
+        ]);
+    }
+
+    function allDoneUserComplaints() {
+        $data = Complaint::where('user_id', auth::user()->id)
+            ->where('status','selesai')
+            ->get();
+        return view('user.complaints.index', [
+            'data' => $data
+        ]);
     }
 
     /**
