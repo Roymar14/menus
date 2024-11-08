@@ -19,10 +19,10 @@ class UserComplaintController extends Controller
         $selesai = Complaint::where('status', 'selesai')->count();
 
         $user_id = Auth::user()->id;
-        $all_user = Complaint::where('user_id', '$user_id')->count();
-        $pending_user = Complaint::where('user_id', '$user_id')->count();
-        $proses_user = Complaint::where('user_id', '$user_id')->count();
-        $selesai_user = Complaint::where('user_id', '$user_id')->count();
+        $all_user = Complaint::where('user_id', $user_id)->count();
+        $pending_user = Complaint::where('user_id', $user_id)->where('status', 'pending')->count();
+        $proses_user = Complaint::where('user_id', $user_id)->where('status', 'proses')->count();
+        $selesai_user = Complaint::where('user_id', $user_id)->where('status', 'selesai')->count();
        
         return view('user.dashboard.index', [
             'all'=> $all,
@@ -50,25 +50,32 @@ class UserComplaintController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required|string|max:225',
-            'descripton' => 'required|string',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $path = 'public/complaints';
+            $image = $request->file('image');
+            $name = $image->getClientOriginalName();
+            $imagePath = $request->file('image')->storeAs($path, $name);
+        }
+
         $user = Auth::user();
         $complaint = new Complaint();
-        $complaint->name = $user->name;
-        $complaint->email = $user->email;
-        $complaint->telp = $user->telp;
+        $complaint->guest_name = $user->name;
+        $complaint->guest_email = $user->email;
+        $complaint->guest_telp = $user->telp;
         $complaint->user_id = $user->id;
 
         $complaint->title = $request->title;
-        $complaint->image = $request->imagePath;
+        $complaint->image = $imagePath;
         $complaint->description = $request->description;
 
         $complaint->save();
-        return redirect()->route('user.index')->with('msg' , 'pengaduan anda berhasil dikirimkan!');
-
+        return redirect()->route('user.index')->with('msg','Pengaduan anda berhasil dikirimkan!');
     }
 
     function allUserComplaints()  { 

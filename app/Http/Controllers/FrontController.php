@@ -43,10 +43,8 @@ class FrontController extends Controller
             'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
         if ($request->hasFile('image')) {
-            $path = 'public/complaints';
             $image = $request->file('image');
-            $name = $image-> getClientOriginalName();
-            $request->file('image')->storeAs($path, $name);
+            $imagePath = $image->store('public/complaints_pengguna');
         }
 
         $user = Auth::user();
@@ -56,7 +54,7 @@ class FrontController extends Controller
         $complaint->guest_telp = $request->telp;
         $complaint->guest_email = $request->email;
         $complaint->description = $request->description;
-        $complaint->image = $name;
+        $complaint->image = $imagePath ? basename($imagePath) : null;
         $complaint->title = $request->title;
         $complaint->user_id = $user ? $user->id : null;
 

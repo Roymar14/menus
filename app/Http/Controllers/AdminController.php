@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Complaint;
+use App\Models\complaintrespons;
+use App\Models\ComplaintResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -53,5 +55,28 @@ class AdminController extends Controller
         'data' => $data
     ]); 
   }
-      
+
+
+  function storeResponse (Request $request) {
+    $request-> validate( [
+        'response' => 'required|string'
+    ]);
+
+    $response = new ComplaintResponse();
+    $response->complaint_id = $request->complaint_id;
+    $response->admin_id =Auth::user()->id;
+    $response->response = $request->input('response');
+    $response->save();
+
+    $complaint = Complaint::findOrfail( $request->complaint_id);
+
+    if ($complaint->status == 'pending') {
+        $complaint->status = 'proses';
+    }elseif ($complaint->status == 'proses'){
+        $complaint->status = 'selesai';
+    }
+    $complaint->save();
+
+    return redirect()->back()->with('msg','Tanggapan berhasil di kirimkan dan status diperbarui!');
+  }
 }

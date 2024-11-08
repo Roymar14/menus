@@ -104,7 +104,7 @@
                             <tbody>
                                 @forelse($data as $value)
                             <tr>
-                                <td><img src="" alt="gambar 1"></td>
+                                <td><img class="img-thumbnail" src="{{asset('/storage/complaints_pengguna/' . $value->image)}}" alt="{{ $value->title }}"></td>
                                 <td>
                                     {{ $value->name ?? $value->guest_name }}                                
                                 </td>    
@@ -118,7 +118,12 @@
                                   @elseif($value->status == 'selesai') #5ddab4
                                   @else #57caeb
                                   @endif">{{ strtoupper($value->status) }}</span></td>
-                                <td class="text-center"><a href="{{ route('response.complaint', $value->id) }}">Tanggapi</a></td>                                       
+                                <td class="text-center">
+                                    @if($value->status == 'selesai')
+                                    <a href="{{route('reponse.complaint', $value->id)}}">Detail</a>  
+                                    @else
+                                    <a href="{{ route('response.complaint', $value->id)}}">Tanggapi</a>
+                                                                         
                             </tr>
                             @empty
 

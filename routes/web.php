@@ -52,6 +52,7 @@ route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function() {
     Route::get('/all-pending-complaints', [AdminController::class, 'allpendingComplaints'])->name('admin.all.pending.complaints');
     Route::get('/all-process-complaints', [AdminController::class, 'allprocessComplaints'])->name('admin.all.process.complaints');
     Route::get('/all-success-complaints', [AdminController::class, 'allsuccessComplaints'])->name('admin.all.success.complaints');
+    Route::post('/complain-response', [AdminController::class, 'storeResponse'])->name('admin.complaints.response');
 });
 
 Route::prefix('user')->middleware(['auth', 'isUser'])->group(function() {
